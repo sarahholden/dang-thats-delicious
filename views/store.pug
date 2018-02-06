@@ -1,0 +1,33 @@
+extends layout
+
+include mixins/_reviewCard.pug
+include mixins/_reviewForm.pug
+
+block content
+	.single
+		.single__hero
+			if (store.photo)
+				img.single__image(src=`/uploads/${store.photo}`)
+			h2.title.title--single
+				a(href=`/store/${store.slug}`)= store.name
+	.single__details.inner
+		//- pre= h.dump(store)
+		img.single__map(src=h.staticMap(store.location.coordinates))
+		p.single__location= store.location.address
+		p= store.description
+		if store.tags
+			ul.tags
+				each tag in store.tags
+					li.tag
+						a(class="tag__link" href=`/tags/${tag}`)
+							span.tag__text ##{tag}
+
+		if user
+			+reviewForm(store)
+
+		//- - const reviews = [{gravatarId: "9efd86dfb66394fae773919df6a9c0fb", author: 'Wes Bos', rating: 5, created: "2017-03-08T22:36:48.575Z", text: "Always a great spot to grab a coffee with a friend."}]
+
+		if store.reviews
+			.reviews
+				each review in store.reviews
+					+reviewCard(review)

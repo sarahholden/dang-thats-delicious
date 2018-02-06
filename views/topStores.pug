@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  .inner
+    h2 Top #{stores.length} Stores
+    table.table
+      thead
+        td photo
+        td ranking
+        td name
+        td reviews
+        td Average Rating
+      // We need , i because we need the index this time too
+      each store, i in stores
+        //- pre= h.dump(store)
+        tr
+          td: img(width=200 src=`/uploads/${store.photo || 'store.png'}` alt=store.name)
+          td #{i + 1}
+          td: a(href=`/store/${store.slug}`)= store.name
+          td= store.reviews.length
+          td #{Math.round(10 * store.averageRating) / 10} / 5
+          

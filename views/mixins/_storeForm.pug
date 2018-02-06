@@ -1,0 +1,26 @@
+//- Provide a store (if user is editing) or an empty object
+mixin storeForm(store = {})
+  form(action=`/add/${store._id || ''}` method="POST" enctype="multipart/form-data" class="card")
+    label(for="name") Name
+    input(type="text" name="name" placeholder="Name" id="name" value=store.name)
+    label(for="description") Description
+    textarea(name="description" placeholder="Description" id="description")= store.description
+    label(for="photo") Photo 
+      input(type="file" name="photo" id="photo" accept="image/gif, image/png, image/jpeg" value=store.photo)
+      if store.photo 
+        img(src=`/uploads/${store.photo}`, alt=store.name width=200)
+    label(for="address") Address
+     //- Square brackets in the name allow us to send nested data!! (See model)
+    input(type="text" id="address" name="location[address]" value=(store.location && store.location.address) required)
+    label(for="lng") Address lng
+    input(type="text" id="lng" name="location[coordinates][0]" value=(store.location && store.location.coordinates[0]) required)
+    label(for="lat") Address lat
+    input(type="text" id="lat" name="location[coordinates][1]" value=(store.location && store.location.coordinates[1]) required)
+    - const choices = ['Wifi', 'Open Late', 'Family Friendly', 'Veggie', 'Licensed'];
+    - const tags = store.tags || []
+    ul.tags
+      each choice in choices
+        .tag.tag__choice
+          input(type="checkbox" id=choice value=choice name="tags" checked=(tags.includes(choice)))
+          label(for=choice)= choice
+    input(type="submit" value="Save" class="button")
